@@ -5,10 +5,12 @@ import psycopg2
 import psycopg2.extras
 import json
 import pandas as pd
-
+import os
 
 app = Flask(__name__)
 app.secret_key = "ai_finance_dashboard_secret_key"
+
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 DB_CONFIG = {
     "host": "localhost",
@@ -17,10 +19,10 @@ DB_CONFIG = {
     "password": "1234"
 }
 
-
 def get_db_connection():
+    if DATABASE_URL:
+        return psycopg2.connect(DATABASE_URL)
     return psycopg2.connect(**DB_CONFIG)
-
 
 def fetch_all_dict(query, params=None):
     conn = get_db_connection()
